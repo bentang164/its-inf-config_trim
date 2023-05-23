@@ -12,5 +12,15 @@ To run the program, download TrimConfig.jar from the Releases section. Then, run
 
 For example: ```java -jar TrimConfig.jar ~/Downloads/Input.txt ~/Downloads/output.txt 1234```
 
+## "Could not find or load main class" Fix
+On certain computer configurations, you may receive this error when trying to run the program. To fix this, you will need to build the program manually. To do so:
+1. Download the **source code**.
+2. Copy ```TrimConfig.java``` from ```its-inf-config_trim-main/src``` into another folder.
+3. In Terminal, run the following:
+4.     ```cd path/to/folder/with/TrimConfig.java```
+5.     ```javac TrimConfig.java```
+6.     ```jar cvfe TrimConfig.jar TrimConfig *.class *.java```
+7. Attempt to run the program by running ```java -jar TrimConfig.jar --version```. This should output ```TrimConfig 1.1.2 built 05/23/2023```.
+
 ## Disclaimer
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS “AS IS” AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
