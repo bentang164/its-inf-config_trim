@@ -17,9 +17,9 @@ On certain computer configurations, you may receive this error when trying to ru
 1. Download the **source code**.
 2. Copy ```TrimConfig.java``` from ```its-inf-config_trim-main/src``` into another folder.
 3. In Terminal, run the following:
-4.     ```cd path/to/folder/with/TrimConfig.java```
-5.     ```javac TrimConfig.java```
-6.     ```jar cvfe TrimConfig.jar TrimConfig *.class *.java```
+4.     cd path/to/folder/with/TrimConfig.java
+5.     javac TrimConfig.java
+6.     jar cvfe TrimConfig.jar TrimConfig *.class *.java
 7. Attempt to run the program by running ```java -jar TrimConfig.jar --version```. This should output ```TrimConfig 1.1.2 built 05/23/2023```.
 
 ## Disclaimer
