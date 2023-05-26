@@ -14,8 +14,8 @@ import java.util.Map;
  * Trunk configurations are extracted separately and written to a separate file.
  * 
  * @author      Ben Tang
- * @since       05/22/23
- * @version     1.1.1
+ * @since       05/23/23
+ * @version     1.1.2
  */
 public class TrimConfig {
     private static final String VERSION = "1.1.2";
