@@ -14,8 +14,8 @@ import java.util.Map;
  * Trunk configurations are extracted separately and written to a separate file.
  * 
  * @author      Ben Tang
- * @since       05/22/23
- * @version     1.1.1
+ * @since       05/23/23
+ * @version     1.1.2
  */
 public class TrimConfig {
     private static final String VERSION = "1.1.2";
@@ -254,7 +254,7 @@ public class TrimConfig {
 
     /**
      * Validates arguments. If invalid arguments were passed in, displays an error message and exits with status code -1.
-     * If 
+     * If '--version' is passed in, prints the current version and build date.
      * @param args passed in from main
      */
     private static void validateArgs(String[] args) {
