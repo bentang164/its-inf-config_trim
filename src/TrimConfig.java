@@ -14,12 +14,12 @@ import java.util.Map;
  * Trunk configurations are extracted separately and written to a separate file.
  * 
  * @author      Ben Tang
- * @since       05/23/23
- * @version     1.1.2
+ * @since       06/20/23
+ * @version     1.1.3
  */
 public class TrimConfig {
-    private static final String VERSION = "1.1.2";
-    private static final String BUILD_DATE = "05/23/2023";
+    private static final String VERSION = "1.1.3";
+    private static final String BUILD_DATE = "06/20/2023";
     private BufferedReader readIn;
     private boolean currentInterfaceIsTrunk, anyInterfaceIsTrunk;
     private Map<String, List<String>> configuration;
@@ -38,6 +38,7 @@ public class TrimConfig {
         defaultCommands.add("snmp trap mac-notification change added");
         defaultCommands.add("snmp trap mac-notification change removed");
         defaultCommands.add("spanning-tree portfast edge");
+        defaultCommands.add("spanning tree portfast");
         defaultCommands.add("spanning-tree bpduguard enable");
         defaultCommands.add("mls qos trust cos");
         defaultCommands.add("switchport access vlan " + defaultVLAN);
