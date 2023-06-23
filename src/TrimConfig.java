@@ -15,10 +15,10 @@ import java.util.Map;
  * 
  * @author      Ben Tang
  * @since       06/23/23
- * @version     1.1.3
+ * @version     1.1.4
  */
 public class TrimConfig {
-    private static final String VERSION = "1.1.3";
+    private static final String VERSION = "1.1.4";
     private static final String BUILD_DATE = "06/23/2023";
     private BufferedReader readIn;
     private boolean currentInterfaceIsTrunk, anyInterfaceIsTrunk;
@@ -41,6 +41,7 @@ public class TrimConfig {
         defaultCommands.add("spanning-tree portfast edge");
         defaultCommands.add("spanning-tree bpduguard enable");
         defaultCommands.add("mls qos trust cos");
+        defaultCommands.add("switchport voice vlan 1320");
         defaultCommands.add("switchport access vlan " + defaultVLAN);
     }
 
@@ -86,13 +87,7 @@ public class TrimConfig {
                         }
 
                         if (!detectDefault(currentLine.trim()) && !currentLine.equals("!")) {
-                            if (currentLine.contains("switchport voice vlan")) {
-                                if (currentLine.contains("1316")) {
-                                    currentInterfaceConfig.add(currentLine);
-                                }
-                            } else {
-                                currentInterfaceConfig.add(currentLine);
-                            }
+                            currentInterfaceConfig.add(currentLine);
                         }
 
                         currentLine = readIn.readLine();
