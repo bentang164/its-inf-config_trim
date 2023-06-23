@@ -37,8 +37,8 @@ public class TrimConfig {
         defaultCommands.add("switchport nonegotiate");
         defaultCommands.add("snmp trap mac-notification change added");
         defaultCommands.add("snmp trap mac-notification change removed");
-        defaultCommands.add("spanning-tree portfast edge");
         defaultCommands.add("spanning tree portfast");
+        defaultCommands.add("spanning-tree portfast edge");
         defaultCommands.add("spanning-tree bpduguard enable");
         defaultCommands.add("mls qos trust cos");
         defaultCommands.add("switchport access vlan " + defaultVLAN);
@@ -86,6 +86,9 @@ public class TrimConfig {
                         }
 
                         if (!detectDefault(currentLine.trim()) && !currentLine.equals("!")) {
+                            if (currentLine.trim().equals("spanning-tree portfast")) {
+                                System.out.println(currentLine);
+                            }
                             if (currentLine.contains("switchport voice vlan")) {
                                 if (currentLine.contains("1316")) {
                                     currentInterfaceConfig.add(currentLine);
@@ -134,10 +137,11 @@ public class TrimConfig {
      */
     private boolean detectDefault(String command) {
         for (String matchAgainst : defaultCommands) {
-            if (command.equals(matchAgainst)) {
+            if (command.equals(matchAgainst) || command.equals("spanning-tree portfast")) {
                 return true;
-            }
+            };
         }
+        
         return false;
     }
 
