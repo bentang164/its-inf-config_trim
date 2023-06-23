@@ -14,12 +14,12 @@ import java.util.Map;
  * Trunk configurations are extracted separately and written to a separate file.
  * 
  * @author      Ben Tang
- * @since       06/20/23
+ * @since       06/23/23
  * @version     1.1.3
  */
 public class TrimConfig {
     private static final String VERSION = "1.1.3";
-    private static final String BUILD_DATE = "06/20/2023";
+    private static final String BUILD_DATE = "06/23/2023";
     private BufferedReader readIn;
     private boolean currentInterfaceIsTrunk, anyInterfaceIsTrunk;
     private Map<String, List<String>> configuration;
@@ -37,7 +37,7 @@ public class TrimConfig {
         defaultCommands.add("switchport nonegotiate");
         defaultCommands.add("snmp trap mac-notification change added");
         defaultCommands.add("snmp trap mac-notification change removed");
-        defaultCommands.add("spanning tree portfast");
+        defaultCommands.add("spanning-tree portfast");
         defaultCommands.add("spanning-tree portfast edge");
         defaultCommands.add("spanning-tree bpduguard enable");
         defaultCommands.add("mls qos trust cos");
@@ -86,9 +86,6 @@ public class TrimConfig {
                         }
 
                         if (!detectDefault(currentLine.trim()) && !currentLine.equals("!")) {
-                            if (currentLine.trim().equals("spanning-tree portfast")) {
-                                System.out.println(currentLine);
-                            }
                             if (currentLine.contains("switchport voice vlan")) {
                                 if (currentLine.contains("1316")) {
                                     currentInterfaceConfig.add(currentLine);
@@ -137,7 +134,7 @@ public class TrimConfig {
      */
     private boolean detectDefault(String command) {
         for (String matchAgainst : defaultCommands) {
-            if (command.equals(matchAgainst) || command.equals("spanning-tree portfast")) {
+            if (command.equals(matchAgainst)) {
                 return true;
             };
         }
