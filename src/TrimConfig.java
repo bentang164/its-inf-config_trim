@@ -64,7 +64,12 @@ public class TrimConfig {
                 List<String> currentInterfaceConfig = new ArrayList<>();
                 currentInterfaceIsTrunk = false;
 
-                if (exitedInterfaceSection(currentLine)) {
+                if (exitedInterfaceSection(currentLine) && (currentInterfaceConfig.size() > 0 && !currentInterfaceConfig.get(0).equals("$"))) {
+                    if (currentInterfaceIsTrunk) {
+                        trunkConfiguration.put(activeInterface, currentInterfaceConfig);
+                    } else {
+                        configuration.put(activeInterface, currentInterfaceConfig);
+                    }
 
                     return;
                 }
