@@ -15,11 +15,12 @@ import java.util.Map;
  * 
  * @author      Ben Tang
  * @since       07/02/23
- * @version     1.1.5
+ * @version     2.0.0
  */
 public class TrimConfig {
-    private static final String VERSION = "1.1.5";
+    private static final String VERSION = "2.0.0";
     private static final String BUILD_DATE = "07/02/2023";
+    private static boolean removeDot1x;
     private BufferedReader readIn;
     private boolean currentInterfaceIsTrunk, anyInterfaceIsTrunk;
     private Map<String, List<String>> configuration;
@@ -43,6 +44,19 @@ public class TrimConfig {
         defaultCommands.add("mls qos trust cos");
         defaultCommands.add("switchport voice vlan 1320");
         defaultCommands.add("switchport access vlan " + defaultVLAN);
+
+        // 802.1x commands
+        if (removeDot1x) {
+            defaultCommands.add("ipv6 traffic-filter DENY-IPV6 in");
+            defaultCommands.add("authentication host-mode multi-auth");
+            defaultCommands.add("authentication order dot1x mab");
+            defaultCommands.add("authentication priority dot1x mab");
+            defaultCommands.add("authentication port-control auto");
+            defaultCommands.add("mab");
+            defaultCommands.add("dot1x pae authenticator");
+            defaultCommands.add("dot1x timeout tx-period 5");
+            defaultCommands.add("dot1x max-reauth-req 1");
+        }
     }
 
     /**
@@ -264,6 +278,7 @@ public class TrimConfig {
     /**
      * Validates arguments. If invalid arguments were passed in, displays an error message and exits with status code -1.
      * If '--version' is passed in, prints the current version and build date.
+     * If 'true' is passed in as the final argument, also removes all dot1x-related commands.
      * @param args passed in from main
      */
     private static void validateArgs(String[] args) {
@@ -272,9 +287,22 @@ public class TrimConfig {
             System.exit(0);
         }
         
-        if (args.length != 3) {
+        if (args.length < 3) {
             System.out.println("[error] Invalid input arguments. Expected 3, got: " + args.length + "\n");
             System.exit(-1);
+        }
+
+        if (args.length == 4) {
+            if (args[3].toLowerCase().equals("true")) {
+                System.out.println("[info] Fourth parameter is 'true', will also remove all dot1x-related commands.");
+                removeDot1x = true;
+            } else {
+                removeDot1x = false;
+                System.out.println("[warn] Ignoring unknown argument '" + args[3] + "'.");
+            }
+        } else if (args.length != 3) {
+            removeDot1x = false;
+            System.out.println("[warn] Ignoring extra argument(s).");
         }
         
         try {
@@ -293,7 +321,7 @@ public class TrimConfig {
         }
     }
 
-    // Argument format: [path to input file] [path to output file] [building default VLAN]
+    // Argument format: [path to input file] [path to output file] [building default VLAN] [true]
     public static void main(String[] args) {
         validateArgs(args);
 
