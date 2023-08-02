@@ -14,12 +14,12 @@ import java.util.Map;
  * Trunk configurations are extracted separately and written to a separate file.
  * 
  * @author      Ben Tang
- * @since       06/23/23
- * @version     1.1.4
+ * @since       07/02/23
+ * @version     1.1.5
  */
 public class TrimConfig {
-    private static final String VERSION = "1.1.4";
-    private static final String BUILD_DATE = "06/23/2023";
+    private static final String VERSION = "1.1.5";
+    private static final String BUILD_DATE = "07/02/2023";
     private BufferedReader readIn;
     private boolean currentInterfaceIsTrunk, anyInterfaceIsTrunk;
     private Map<String, List<String>> configuration;
@@ -65,6 +65,7 @@ public class TrimConfig {
                 currentInterfaceIsTrunk = false;
 
                 if (exitedInterfaceSection(currentLine)) {
+
                     return;
                 }
 
@@ -73,7 +74,13 @@ public class TrimConfig {
                     currentLine = readIn.readLine();
 
                     while (!currentLineIsInterfaceMarker(currentLine)) {
-                        if (exitedInterfaceSection(currentLine)) {
+                        if (exitedInterfaceSection(currentLine)) {                        
+                            if (currentInterfaceIsTrunk) {
+                                trunkConfiguration.put(activeInterface, currentInterfaceConfig);
+                            } else {
+                                configuration.put(activeInterface, currentInterfaceConfig);
+                            }
+
                             return;
                         }
 
