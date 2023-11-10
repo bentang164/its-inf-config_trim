@@ -10,10 +10,10 @@
             "request": "launch",
             "mainClass": "${file}",
             "args": [
-                // "/Users/ben/Library/Application Support/TrimConfig/germanHouse.txt",
-                // "/Users/ben/Downloads/german_trimmed.txt",
-                // 224,
-                // "true"
+                "--edit-config"
+                // "--delete-config"
+                // "--version"
+                // "--help"
             ]
         },
         {
