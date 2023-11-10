@@ -7,12 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class TrimHelper {
-    private final String CONFIG_DIR = System.getProperty("user.home");
+public class SelfConfigHelper {
     private final String CONFIG_PATH = System.getProperty("user.home") + "/.trimHelper_config"; 
-    private List<String> commandsToExclude;
+    public List<String> commandsToExclude;
 
-    public TrimHelper() {
+    public SelfConfigHelper() {
         commandsToExclude = new ArrayList<>();
     }
 
@@ -29,9 +28,9 @@ public class TrimHelper {
     }
 
     private void createConfigFile() {
-        System.out.println("[warn] No self-config file found. Will create file .trimHelper_config at " + CONFIG_DIR);
+        System.out.println("[warn] No config file found. Will create one at " + CONFIG_PATH);
         System.out.println("[info] This config file will contain all commands that will be removed.");
-        System.out.println("\n[info] Enter configuration commands, one per line.  End by passing EXIT.");
+        System.out.println("[info] Enter configuration commands, one per line.  End by passing EXIT.\n");
 
         Scanner input = new Scanner(System.in);
 
@@ -40,15 +39,19 @@ public class TrimHelper {
 
             String command = input.nextLine();
 
-            if (command.length() < 1) {
+            if (command.length() >= 1) {
+                if (command.toLowerCase().equals("exit")) {
+                    break;
+                } else {
+                    commandsToExclude.add(command);
+                }
+            } else {
                 System.out.println("[warn] Command must not be of zero length.");
             }
 
             if (command.toLowerCase().equals("exit")) {
                 break;
             }
-
-            commandsToExclude.add(command);
         }
     
         input.close();
@@ -65,7 +68,6 @@ public class TrimHelper {
     }
 
     private void writeConfigFile() {
-        System.out.println("[debug] In writeConfigFile");
         try {
             FileWriter configFile = new FileWriter(CONFIG_PATH);
 
@@ -81,8 +83,6 @@ public class TrimHelper {
             e.printStackTrace();
             System.exit(-1);
         }
-
-        readConfig();
     }
 
     private void readConfig() {
@@ -105,19 +105,11 @@ public class TrimHelper {
         }   
     }
 
-    private void run() {
+    public void exec(boolean editConfig, boolean deleteConfig) {
         if (!checkForConfig()) {
             createConfigFile();
         } else {
             readConfig();
         }
-
-        System.out.println("[debug] Command list read from file: " + commandsToExclude.toString());
-    }
-
-    public static void main(String[] args) {
-        TrimHelper trim = new TrimHelper();
-
-        trim.run();
     }
 }
