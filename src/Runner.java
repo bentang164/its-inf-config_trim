@@ -1,5 +1,7 @@
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class Runner {
     private final List<String> VALID_ARGS = Arrays.asList(new String[]{"--edit-config", "--delete-config", "--version", "--help"});
@@ -11,6 +13,9 @@ public class Runner {
     private final int VERSION_MINOR = 0;
 
     private boolean editConfig, deleteConfig;
+
+    public int defaultVLAN;
+    public String inputPath;
 
     public Runner() {
         editConfig = false;
@@ -56,12 +61,43 @@ public class Runner {
         }
     }
     
+    private void getInfo() {
+        Scanner inputRunner = new Scanner(System.in);
+
+        while (true) {
+            System.out.print("Enter the building default VLAN: ");
+            String userInputVLAN = inputRunner.nextLine();
+
+            try {
+                this.defaultVLAN = Integer.parseInt(userInputVLAN);
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("[error] Input is not a valid number.");
+            }
+        }
+
+        while (true) {
+            System.out.print("Enter the path to the input configuration file: ");
+            String userFilePath = inputRunner.nextLine();
+
+            if (new File(userFilePath).exists()) {
+                userFilePath.replace(" ", "\\ ");
+                break;
+            } else {
+                System.out.println("[error] File does not exist or is inaccessible.");
+            }
+        }
+
+        inputRunner.close();
+    }
+
     public static void main(String[] args) {
         Runner runner = new Runner();
         SelfConfigHelper getConfig = new SelfConfigHelper();
         // Trimmer trim = new Trimmer();
 
         runner.validateArgs(args);
+        runner.getInfo();
 
         getConfig.exec(runner.editConfig, runner.deleteConfig);
     }
