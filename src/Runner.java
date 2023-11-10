@@ -59,7 +59,7 @@ public class Runner {
     public static void main(String[] args) {
         Runner runner = new Runner();
         SelfConfigHelper getConfig = new SelfConfigHelper();
-        Trimmer trim = new Trimmer();
+        // Trimmer trim = new Trimmer();
 
         runner.validateArgs(args);
 

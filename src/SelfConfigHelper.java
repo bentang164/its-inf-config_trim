@@ -171,7 +171,7 @@ public class SelfConfigHelper {
         if (commandsToRemove.size() < 1) {
             System.out.println("[warn] No commands specified to remove, continuing without modifying config.");
         } else {
-            for (int i = 0; i < commandsToExclude.size() - 1; i++) {
+            for (int i = 0; i < commandsToExclude.size(); i++) {
                 for (String command : commandsToRemove) {
                     if (commandsToExclude.get(i).equals(command)) {
                         commandsToExclude.remove(i);
