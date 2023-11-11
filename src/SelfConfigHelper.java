@@ -9,8 +9,6 @@ import java.util.Scanner;
 
 /**
  * TODO:
- * Add 'switchport access vlan defaultVLAN' to the file
- * If the user's input contains 'spanning-tree portfast', add both 'spanning-tree portfast' and 'spanning-tree portfast edge' to the file
  * Add Javadoc as needed
  */
 public class SelfConfigHelper {
@@ -49,7 +47,13 @@ public class SelfConfigHelper {
                 if (command.toLowerCase().equals("exit")) {
                     break;
                 } else {
-                    commandsToExclude.add(command);
+                    if (command.equals("spanning-tree portfast") && !commandsToExclude.contains("spanning-tree portfast edge")) {
+                        commandsToExclude.add("spanning-tree portfast edge");
+                    } else if (command.equals("spanning-tree portfast edge") && !commandsToExclude.contains("spanning-tree portfast")) {
+                        commandsToExclude.add("spanning-tree portfast");
+                    } else {
+                        commandsToExclude.add(command);
+                    }
                 }
             } else {
                 for (int i = 0; i < "TrimHelper(config)#".length(); i++) {
@@ -74,6 +78,8 @@ public class SelfConfigHelper {
     }
 
     private void writeConfigFile() {
+        
+
         try {
             FileWriter configFile = new FileWriter(CONFIG_PATH);
 

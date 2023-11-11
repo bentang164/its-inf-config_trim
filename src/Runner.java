@@ -14,7 +14,6 @@ public class Runner {
 
     private boolean editConfig, deleteConfig, showConfig;
 
-    public int defaultVLAN;
     public String inputPath;
 
     public Runner() {
@@ -69,18 +68,6 @@ public class Runner {
     
     private void getInfo() {
         Scanner inputRunner = new Scanner(System.in);
-
-        while (true) {
-            System.out.print("Enter the building default VLAN: ");
-            String userInputVLAN = inputRunner.nextLine();
-
-            try {
-                this.defaultVLAN = Integer.parseInt(userInputVLAN);
-                break;
-            } catch (NumberFormatException e) {
-                System.out.println("[error] Input is not a valid number.");
-            }
-        }
 
         while (true) {
             System.out.print("Enter the path to the input configuration file: ");
