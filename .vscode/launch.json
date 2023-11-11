@@ -10,8 +10,9 @@
             "request": "launch",
             "mainClass": "${file}",
             "args": [
-                "--edit-config"
+                // "--edit-config"
                 // "--delete-config"
+                // "--show-config"
                 // "--version"
                 // "--help"
             ]

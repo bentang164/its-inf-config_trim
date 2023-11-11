@@ -7,9 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * TODO:
+ * Add 'switchport access vlan defaultVLAN' to the file
+ * If the user's input contains 'spanning-tree portfast', add both 'spanning-tree portfast' and 'spanning-tree portfast edge' to the file
+ * Add Javadoc as needed
+ */
 public class SelfConfigHelper {
     private final String CONFIG_PATH = System.getProperty("user.home") + "/.trimHelper_config"; 
-    private boolean editConfig;
+    private boolean editConfig, showConfig;
     public List<String> commandsToExclude;
 
     public SelfConfigHelper() {
@@ -20,7 +26,7 @@ public class SelfConfigHelper {
     private boolean checkForConfig() {
         File config = new File(CONFIG_PATH);
 
-        if (config.exists() && !config.isDirectory()) {
+        if (config.exists() && !config.isDirectory() && config.length() > 0) {
             return true;
         }
 
@@ -51,10 +57,6 @@ public class SelfConfigHelper {
                 }
                 System.out.println("^");
                 System.out.println("% Invalid input detected at '^' marker. Command must not be of zero length.\n");
-            }
-
-            if (command.toLowerCase().equals("exit")) {
-                break;
             }
         }
     
@@ -112,23 +114,16 @@ public class SelfConfigHelper {
         if (editConfig) {
             editConfig();
         }
+
+        if (showConfig) {
+            showConfig();
+        }
     }
 
     private void editConfig() {
         List<String> commandsToRemove = new ArrayList<>();
 
-        System.out.println("Building configuration...\n");
-
-        File config = new File(CONFIG_PATH);
-
-        System.out.println("Current configuration : " + config.length() + " bytes\n!");
-        for (String command : commandsToExclude) {
-            if (!command.startsWith("//")) {
-                System.out.println(" " + command);
-            }
-        }
-
-        System.out.println("end\n");
+        showConfig();
 
         System.out.println("Enter configuration commands to remove, one per line. Prefix with 'no'. End by passing EXIT.");
 
@@ -160,10 +155,6 @@ public class SelfConfigHelper {
                 System.out.println("^");
                 System.out.println("% Invalid input detected at '^' marker. Command must not be of zero length.\n");
             }
-
-            if (command.toLowerCase().equals("exit")) {
-                break;
-            }
         }
 
         input.close();
@@ -184,8 +175,24 @@ public class SelfConfigHelper {
         }
     }
 
-    public void exec(boolean editConfig, boolean deleteConfig) {
+    private void showConfig() {
+        System.out.println("Building configuration...\n");
+
+        File config = new File(CONFIG_PATH);
+
+        System.out.println("Current configuration : " + config.length() + " bytes\n!");
+        for (String command : commandsToExclude) {
+            if (!command.startsWith("//")) {
+                System.out.println(" " + command);
+            }
+        }
+
+        System.out.println("end\n");
+    }
+
+    public void exec(boolean editConfig, boolean deleteConfig, boolean showConfig) {
         this.editConfig = editConfig;
+        this.showConfig = showConfig;
 
         if (deleteConfig) {
             new File(CONFIG_PATH).delete();

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Runner {
-    private final List<String> VALID_ARGS = Arrays.asList(new String[]{"--edit-config", "--delete-config", "--version", "--help"});
+    private final List<String> VALID_ARGS = Arrays.asList(new String[]{"--edit-config", "--delete-config", "--show-config", "--version", "--help"});
     private final String VERSION_BUILD_DAY_CHAR = "Fri";
     private final String VERSION_BUILD_MONTH = "Nov";
     private final int VERSION_BUILD_DAY_NUMERIC = 10;
@@ -12,7 +12,7 @@ public class Runner {
     private final int VERSION_MAJOR = 3;
     private final int VERSION_MINOR = 0;
 
-    private boolean editConfig, deleteConfig;
+    private boolean editConfig, deleteConfig, showConfig;
 
     public int defaultVLAN;
     public String inputPath;
@@ -20,6 +20,7 @@ public class Runner {
     public Runner() {
         editConfig = false;
         deleteConfig = false;
+        showConfig = false;
     }
 
     private void validateArgs(String[] args) {
@@ -48,6 +49,11 @@ public class Runner {
             return;
         }
 
+        if (arg.equals("--show-config")) {
+            showConfig = true;
+            return;
+        }
+
         if (arg.equals("--version")) {
             System.out.println("Configuration Trimmer Software, Version " + VERSION_MAJOR + "." + VERSION_MINOR + 
                                "\nCompiled " + VERSION_BUILD_DAY_CHAR + " " + VERSION_BUILD_DAY_NUMERIC + "-" + VERSION_BUILD_MONTH + "-" + VERSION_BUILD_YEAR + " by btang");
@@ -56,7 +62,7 @@ public class Runner {
         }
 
         if (arg.equals("--help")) {
-            System.out.println("usage: java -jar Trim.jar [--edit-config] [--delete-config] [--version] [--help]");
+            System.out.println("usage: java -jar Trim.jar [--edit-config] [--delete-config] [--show-config] [--version] [--help]");
             System.exit(0);
         }
     }
@@ -80,8 +86,8 @@ public class Runner {
             System.out.print("Enter the path to the input configuration file: ");
             String userFilePath = inputRunner.nextLine();
 
-            if (new File(userFilePath).exists()) {
-                userFilePath.replace(" ", "\\ ");
+            if (new File(userFilePath.replace("'", "")).exists()) {
+                this.inputPath = userFilePath;
                 break;
             } else {
                 System.out.println("[error] File does not exist or is inaccessible.");
@@ -97,8 +103,8 @@ public class Runner {
         // Trimmer trim = new Trimmer();
 
         runner.validateArgs(args);
-        runner.getInfo();
+        // runner.getInfo();
 
-        getConfig.exec(runner.editConfig, runner.deleteConfig);
+        getConfig.exec(runner.editConfig, runner.deleteConfig, runner.showConfig);
     }
 }
