@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 /**
  * TODO:
+ * Add ability to add to the configuration, not just remove.
  * Add Javadoc as needed
  */
 public class SelfConfigHelper {
@@ -78,8 +79,6 @@ public class SelfConfigHelper {
     }
 
     private void writeConfigFile() {
-        
-
         try {
             FileWriter configFile = new FileWriter(CONFIG_PATH);
 
@@ -131,12 +130,12 @@ public class SelfConfigHelper {
 
         showConfig();
 
-        System.out.println("Enter configuration commands to remove, one per line. Prefix with 'no'. End by passing EXIT.");
+        System.out.println("Enter configuration commands, one per line. Prefix with 'no' to remove the specified command. End by passing EXIT.");
 
         Scanner input = new Scanner(System.in);
 
         while (true) {
-            System.out.print("TrimHelper(config-rem)#");
+            System.out.print("TrimHelper(config)#");
 
             String command = input.nextLine();
 
@@ -144,18 +143,14 @@ public class SelfConfigHelper {
                 if (command.toLowerCase().equals("exit")) {
                     break;
                 } else {
-                    if (!command.toLowerCase().startsWith("no")) {
-                        for (int i = 0; i < "TrimHelper(config-rem)#".length(); i++) {
-                            System.out.print(" ");
-                        }
-                        System.out.println("^");
-                        System.out.println("% Invalid input detected at '^' marker. Command must be prefixed with 'no'.\n");
-                    } else {
+                    if (command.toLowerCase().startsWith("no")) {
                         commandsToRemove.add(command.substring(3));
+                    } else {
+                        commandsToExclude.add(command);
                     }
                 }
             } else {
-                for (int i = 0; i < "TrimHelper(config-rem)#".length(); i++) {
+                for (int i = 0; i < "TrimHelper(config)#".length(); i++) {
                     System.out.print(" ");
                 }
                 System.out.println("^");

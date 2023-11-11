@@ -70,7 +70,7 @@ public class Runner {
         Scanner inputRunner = new Scanner(System.in);
 
         while (true) {
-            System.out.print("Enter the path to the input configuration file: ");
+            System.out.print("Enter the path to the input configuration file to trim: ");
             String userFilePath = inputRunner.nextLine();
 
             if (new File(userFilePath.replace("'", "")).exists()) {
