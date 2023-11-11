@@ -103,7 +103,7 @@ public class Runner {
         // Trimmer trim = new Trimmer();
 
         runner.validateArgs(args);
-        // runner.getInfo();
+        runner.getInfo();
 
         getConfig.exec(runner.editConfig, runner.deleteConfig, runner.showConfig);
     }
