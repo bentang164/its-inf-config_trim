@@ -7,11 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * TODO:
- * Add ability to add to the configuration, not just remove.
- * Add Javadoc as needed
- */
 public class SelfConfigHelper {
     private final String CONFIG_PATH = System.getProperty("user.home") + "/.trimHelper_config"; 
     private boolean editConfig, showConfig;
@@ -37,12 +32,10 @@ public class SelfConfigHelper {
         System.out.println("[info] This config file will contain all commands that will be removed.");
         System.out.println("\nEnter configuration commands, one per line.  End by passing EXIT.");
 
-        Scanner input = new Scanner(System.in);
-
         while (true) {
             System.out.print("TrimHelper(config)#");
 
-            String command = input.nextLine();
+            String command = Runner.userInput.nextLine();
 
             if (command.length() >= 1) {
                 if (command.toLowerCase().equals("exit")) {
@@ -64,8 +57,6 @@ public class SelfConfigHelper {
                 System.out.println("% Invalid input detected at '^' marker. Command must not be of zero length.\n");
             }
         }
-    
-        input.close();
 
         try {
             new File(CONFIG_PATH).createNewFile();
@@ -130,14 +121,12 @@ public class SelfConfigHelper {
 
         showConfig();
 
-        System.out.println("Enter configuration commands, one per line. Prefix with 'no' to remove the specified command. End by passing EXIT.");
-
-        Scanner input = new Scanner(System.in);
+        System.out.println("Enter configuration commands, one per line.  Prefix with 'no' to remove the specified command.  End by passing EXIT.");
 
         while (true) {
             System.out.print("TrimHelper(config)#");
 
-            String command = input.nextLine();
+            String command = Runner.userInput.nextLine();
 
             if (command.length() >= 1) {
                 if (command.toLowerCase().equals("exit")) {
@@ -157,8 +146,6 @@ public class SelfConfigHelper {
                 System.out.println("% Invalid input detected at '^' marker. Command must not be of zero length.\n");
             }
         }
-
-        input.close();
 
         if (commandsToRemove.size() < 1) {
             System.out.println("[warn] No commands specified to remove, continuing without modifying config.");
@@ -198,6 +185,7 @@ public class SelfConfigHelper {
         if (deleteConfig) {
             new File(CONFIG_PATH).delete();
             System.out.println("[info] Config file deleted, on next run will prompt to recreate.");
+            Runner.printExit();
             System.exit(0);
         }
         

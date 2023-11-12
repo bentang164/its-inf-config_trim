@@ -1,4 +1,5 @@
 import java.io.File;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -15,11 +16,13 @@ public class Runner {
     private boolean editConfig, deleteConfig, showConfig;
 
     public String inputPath;
+    public static Scanner userInput;
 
     public Runner() {
         editConfig = false;
         deleteConfig = false;
         showConfig = false;
+        userInput = new Scanner(System.in);
     }
 
     private void validateArgs(String[] args) {
@@ -39,6 +42,7 @@ public class Runner {
         }
 
         if (arg.equals("--edit-config")) {
+            System.out.println("\n--edit-config passed, prompting to edit the list of commands to exclude when trimming.\n");
             editConfig = true;
             return;
         }
@@ -49,6 +53,7 @@ public class Runner {
         }
 
         if (arg.equals("--show-config")) {
+            System.out.println("\n--show-config passed, displaying current list of commands to exclude when trimming.\n");
             showConfig = true;
             return;
         }
@@ -57,21 +62,21 @@ public class Runner {
             System.out.println("Configuration Trimmer Software, Version " + VERSION_MAJOR + "." + VERSION_MINOR + 
                                "\nCompiled " + VERSION_BUILD_DAY_CHAR + " " + VERSION_BUILD_DAY_NUMERIC + "-" + VERSION_BUILD_MONTH + "-" + VERSION_BUILD_YEAR + " by btang");
             
+            printExit();
             System.exit(0);
         }
 
         if (arg.equals("--help")) {
             System.out.println("usage: java -jar Trim.jar [--edit-config] [--delete-config] [--show-config] [--version] [--help]");
+            printExit();
             System.exit(0);
         }
     }
     
     private void getInfo() {
-        Scanner inputRunner = new Scanner(System.in);
-
         while (true) {
             System.out.print("Enter the path to the input configuration file to trim: ");
-            String userFilePath = inputRunner.nextLine();
+            String userFilePath = userInput.nextLine();
 
             if (new File(userFilePath.replace("'", "")).exists()) {
                 this.inputPath = userFilePath;
@@ -80,8 +85,10 @@ public class Runner {
                 System.out.println("[error] File does not exist or is inaccessible.");
             }
         }
+    }
 
-        inputRunner.close();
+    public static void printExit() {
+        System.out.println("[info] Exited Configuration Trimmer session at " + ZonedDateTime.now());
     }
 
     public static void main(String[] args) {
@@ -90,8 +97,14 @@ public class Runner {
         // Trimmer trim = new Trimmer();
 
         runner.validateArgs(args);
+        getConfig.exec(runner.editConfig, runner.deleteConfig, runner.showConfig);
+
         runner.getInfo();
 
-        getConfig.exec(runner.editConfig, runner.deleteConfig, runner.showConfig);
+        // trim.trimConfig();
+
+        userInput.close();
+
+        printExit();
     }
 }
