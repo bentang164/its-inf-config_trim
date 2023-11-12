@@ -15,7 +15,10 @@ Test if config file already exists at: ~/Library/Application Support/TrimConfig/
      
 Read in the specified file to trim.
 
-     While the current line does not contain 'interface vlan':
+While the inputted file has another line:
+     Read the next line in the file
+
+     If the line does not contain 'interface vlan':
          If the update marker is true:
              Advance the current line to the next line
          

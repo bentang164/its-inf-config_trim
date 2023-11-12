@@ -15,7 +15,7 @@ public class Runner {
 
     private boolean editConfig, deleteConfig, showConfig;
 
-    public String inputPath;
+    public static String inputPath;
     public static Scanner userInput;
 
     public Runner() {
@@ -94,14 +94,15 @@ public class Runner {
     public static void main(String[] args) {
         Runner runner = new Runner();
         SelfConfigHelper getConfig = new SelfConfigHelper();
-        // Trimmer trim = new Trimmer();
-
+        
         runner.validateArgs(args);
         getConfig.exec(runner.editConfig, runner.deleteConfig, runner.showConfig);
-
+        
         runner.getInfo();
+        
+        Trimmer trim = new Trimmer();
 
-        // trim.trimConfig();
+        trim.exec();
 
         userInput.close();
 
