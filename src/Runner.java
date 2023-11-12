@@ -79,7 +79,7 @@ public class Runner {
             String userFilePath = userInput.nextLine();
 
             if (new File(userFilePath.replace("'", "")).exists()) {
-                this.inputPath = userFilePath;
+                inputPath = userFilePath;
                 break;
             } else {
                 System.out.println("[error] File does not exist or is inaccessible.");
