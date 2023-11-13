@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Runner {
-    private final List<String> VALID_ARGS = Arrays.asList(new String[]{"--edit-config", "--delete-config", "--show-config", "--version", "--help"});
+    private final List<String> VALID_ARGS = Arrays.asList(new String[]{"--edit-config", "--delete-config", "--show-config", "--help"});
     private final Pattern QUOTATION_MARKS = Pattern.compile("[\"'\u2018\u2019\u201c\u201d]");   // https://stackoverflow.com/a/35534669
     private final String VERSION_BUILD_DAY_CHAR = "Mon";
     private final String VERSION_BUILD_MONTH = "Nov";
@@ -35,13 +35,13 @@ public class Runner {
         }
 
         if (args.length > 1) {
-            System.out.println("[warn] Invalid arguments. Expected: 1, got: " + args.length + ". Ignoring extra arguments");
+            System.out.println("[warn] Invalid arguments. Expected: 1, got: " + args.length + ". Ignoring extra arguments.\n");
         }
 
         String arg = args[0];
 
         if (!VALID_ARGS.contains(arg)) {
-            System.out.println("[warn] Invalid argument '" + arg + "'. Ignoring.");
+            System.out.println("[warn] Invalid argument '" + arg + "'. Ignoring.\n");
             return;
         }
 
@@ -60,14 +60,8 @@ public class Runner {
             return;
         }
 
-        if (arg.equals("--version")) {
-            printStart();
-            printExit();
-            System.exit(0);
-        }
-
         if (arg.equals("--help")) {
-            System.out.println("usage: java -jar TrimConfig.jar [--edit-config] [--delete-config] [--show-config] [--version] [--help]");
+            System.out.println("usage: java -jar TrimConfig.jar [--edit-config] [--delete-config] [--show-config] [--help]\n");
             printExit();
             System.exit(0);
         }
@@ -146,6 +140,8 @@ public class Runner {
         getConfig.exec(runner.editConfig, runner.deleteConfig, runner.showConfig);
         
         runner.getInfo();
+
+        getConfig.excludeDefaultVLAN();
 
         Trimmer trim = new Trimmer();
         trim.exec();

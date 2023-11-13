@@ -39,6 +39,7 @@ public class SelfConfigHelper {
 
             if (command.length() >= 1) {
                 if (command.toLowerCase().equals("exit")) {
+                    System.out.println();
                     break;
                 } else {
                     if (command.equals("spanning-tree portfast") && !commandsToExclude.contains("spanning-tree portfast edge")) {
@@ -134,6 +135,7 @@ public class SelfConfigHelper {
 
             if (command.length() >= 1) {
                 if (command.toLowerCase().equals("exit")) {
+                    System.out.println();
                     break;
                 } else {
                     if (command.toLowerCase().startsWith("no")) {
@@ -193,13 +195,15 @@ public class SelfConfigHelper {
         System.out.println("end\n");
     }
 
-    public void exec(boolean editConfig, boolean deleteConfig, boolean showConfig) {
-        this.editConfig = editConfig;
-        this.showConfig = showConfig;
-
+    public void excludeDefaultVLAN() {
         if (Runner.userVLAN != 0) {
             commandsToExclude.add("switchport access vlan " + Runner.userVLAN);
         }
+    }
+
+    public void exec(boolean editConfig, boolean deleteConfig, boolean showConfig) {
+        this.editConfig = editConfig;
+        this.showConfig = showConfig;
 
         if (deleteConfig) {
             new File(CONFIG_PATH).delete();
