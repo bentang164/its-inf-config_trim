@@ -27,10 +27,8 @@ While the inputted file has another line:
              While the current line does not contain 'interface':
                  Read in the next line
                  For each command in the list of commands to exclude:
-                     If the current line matches on a command:
-                         Update the exclude marker to true 
-                 If the exclude marker is false:
-                     Add the current line into a list of commands to keep
+                     If the current line does not match on a command:
+                         Add the command to the list of commands to add
              
              Add the interface marker as the key into the map, and the list of commands as the value
              Set the update marker to false so the line is not advanced

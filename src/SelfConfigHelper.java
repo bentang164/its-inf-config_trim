@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class SelfConfigHelper {
     private final String CONFIG_PATH = System.getProperty("user.home") + "/.trimHelper_config"; 
     private boolean editConfig, showConfig;
-    public List<String> commandsToExclude;
+    public static List<String> commandsToExclude;
 
     public SelfConfigHelper() {
         editConfig = false;
