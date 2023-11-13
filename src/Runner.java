@@ -138,15 +138,13 @@ public class Runner {
 
     public static void main(String[] args) {
         Runner runner = new Runner();
-        SelfConfigHelper getConfig = new SelfConfigHelper();
-        
         runner.validateArgs(args);
+        runner.getInfo();
+
+        SelfConfigHelper getConfig = new SelfConfigHelper();
         getConfig.exec(runner.editConfig, runner.deleteConfig, runner.showConfig);
         
-        runner.getInfo();
-        
         Trimmer trim = new Trimmer();
-
         trim.exec();
 
         userInput.close();

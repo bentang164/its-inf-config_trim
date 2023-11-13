@@ -42,10 +42,10 @@ public class Trimmer {
         String currentInterface = "";
         String currentLine = "";
         boolean excludeCommand = false;
-        // boolean atInterfaceConfig = false;
         List<String> commandsToAdd = new ArrayList<>();
 
         while (reader.hasNextLine()) {
+
             if (currentLine.isEmpty()) {
                 currentLine = reader.nextLine();
             } else {
@@ -53,14 +53,13 @@ public class Trimmer {
             }
 
             if (currentLine.startsWith("interface Vlan")) {
+                // System.out.println("[debug] At return, trimmedContents is: " + trimmedContents.toString());
                 return;
             }
 
             if (currentLine.startsWith("interface")) {
-                // atInterfaceConfig = true;
                 currentInterface = currentLine;
                 currentLine = reader.nextLine();
-                commandsToAdd.clear();
 
                 while (!currentLine.startsWith("interface")) {
                     for (String excludeThis : SelfConfigHelper.commandsToExclude) {
@@ -70,26 +69,23 @@ public class Trimmer {
                     }
                     
                     if (!excludeCommand && !currentLine.equals("!")) {
-                        System.out.println("[debug] Adding command " + currentLine + " to commandsToAdd.");    
-                        commandsToAdd.add(currentLine);
+                        commandsToAdd.add(currentLine.strip());
                     }
 
                     excludeCommand = false;
                     currentLine = reader.nextLine();
                 }
+            }
 
-                
-                if (!commandsToAdd.isEmpty()) {
-                    System.out.println("[debug] Putting the following data into trimmedContents: Key: " + currentInterface + ", value: " + commandsToAdd.toString());
-                    trimmedContents.put(currentInterface, commandsToAdd);
-                }
+            
+            if (!commandsToAdd.isEmpty()) {
+                trimmedContents.put(currentInterface, commandsToAdd);
+                commandsToAdd.clear();      // behaves exactly as trimmedContents.get(currentInterface).clear() for some stupid reason
             }
         }
     }
 
     private void writeTrimmedConfig() {
-        System.out.println("[debug] Writing to file, contents of trimmedContents: " + trimmedContents.toString());
-
         try {
             FileWriter trimmedConfig = new FileWriter(Runner.outputPath);
 
