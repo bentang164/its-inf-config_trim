@@ -42,10 +42,9 @@ public class Trimmer {
         String currentInterface = "";
         String currentLine = "";
         boolean excludeCommand = false;
-        List<String> commandsToAdd = new ArrayList<>();
 
         while (reader.hasNextLine()) {
-
+            List<String> commandsToAdd = new ArrayList<>();
             if (currentLine.isEmpty()) {
                 currentLine = reader.nextLine();
             } else {
@@ -80,7 +79,6 @@ public class Trimmer {
             
             if (!commandsToAdd.isEmpty()) {
                 trimmedContents.put(currentInterface, commandsToAdd);
-                commandsToAdd.clear();      // behaves exactly as trimmedContents.get(currentInterface).clear() for some stupid reason
             }
         }
     }
