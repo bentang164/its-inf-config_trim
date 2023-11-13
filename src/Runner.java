@@ -19,7 +19,7 @@ public class Runner {
     private boolean editConfig, deleteConfig, showConfig;
 
     public static int userVLAN;
-    public static String inputPath, outputPath, fileName;
+    public static String inputPath, outputPath, outputPathNoExt, fileName, fileNameNoExt;
     public static Scanner userInput;
 
     public Runner() {
@@ -101,20 +101,6 @@ public class Runner {
                 System.out.println("[error] Input is not a valid integer.");
             }
         }
-
-        while(true) {
-            System.out.print("Enter the path that the trimmed configuration file should be outputted to, or leave blank to use the default: ");
-            String userOutputPath = userInput.nextLine();
-
-            if (!(userOutputPath.isEmpty() && userOutputPath.isBlank())) {
-                outputPath = userOutputPath;
-                return;
-            } else {
-                System.out.println("[info] No path given, will write to " + System.getProperty("user.home") + "/Downloads/" + fileName);
-                outputPath = System.getProperty("user.home") + "/Downloads/" + fileName;
-                return;
-            }
-        }
     }
 
     private void setFileName() {
@@ -126,7 +112,11 @@ public class Runner {
             cleanPath = cleanPath.substring(cleanPath.lastIndexOf("/") + 1, cleanPath.length());
         }
 
+        fileNameNoExt = cleanPath.substring(0, cleanPath.lastIndexOf(".")) + "_trimmed";
         fileName = cleanPath.substring(0, cleanPath.lastIndexOf(".")) + "_trimmed" + fileExtension;
+
+        outputPath = System.getProperty("user.home") + "/" + fileName;
+        outputPathNoExt = System.getProperty("user.home") + "/";
     }
 
     private void printStart() {
