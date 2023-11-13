@@ -69,7 +69,7 @@ public class Runner {
         }
 
         if (arg.equals("--help")) {
-            System.out.println("usage: java -jar Trim.jar [--edit-config] [--delete-config] [--show-config] [--version] [--help]");
+            System.out.println("usage: java -jar TrimConfig.jar [--edit-config] [--delete-config] [--show-config] [--version] [--help]");
             printExit();
             System.exit(0);
         }
