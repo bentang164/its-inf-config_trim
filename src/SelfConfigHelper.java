@@ -43,8 +43,10 @@ public class SelfConfigHelper {
                 } else {
                     if (command.equals("spanning-tree portfast") && !commandsToExclude.contains("spanning-tree portfast edge")) {
                         commandsToExclude.add("spanning-tree portfast edge");
+                        commandsToExclude.add("spanning-tree portfast");
                     } else if (command.equals("spanning-tree portfast edge") && !commandsToExclude.contains("spanning-tree portfast")) {
                         commandsToExclude.add("spanning-tree portfast");
+                        commandsToExclude.add("spanning-tree portfast edge");
                     } else {
                         commandsToExclude.add(command);
                     }
@@ -133,9 +135,22 @@ public class SelfConfigHelper {
                     break;
                 } else {
                     if (command.toLowerCase().startsWith("no")) {
-                        commandsToRemove.add(command.substring(3));
+                        if (command.contains("spanning-tree portfast")) {
+                            commandsToRemove.add("spanning-tree portfast");
+                            commandsToRemove.add("spanning-tree portfast edge");
+                        } else {
+                            commandsToRemove.add(command.substring(3));
+                        }
                     } else {
-                        commandsToExclude.add(command);
+                        if (command.equals("spanning-tree portfast") && !commandsToExclude.contains("spanning-tree portfast edge")) {
+                            commandsToExclude.add("spanning-tree portfast edge");
+                            commandsToExclude.add("spanning-tree portfast");
+                        } else if (command.equals("spanning-tree portfast edge") && !commandsToExclude.contains("spanning-tree portfast")) {
+                            commandsToExclude.add("spanning-tree portfast");
+                            commandsToExclude.add("spanning-tree portfast edge");
+                        } else {
+                            commandsToExclude.add(command);
+                        }
                     }
                 }
             } else {
@@ -147,9 +162,7 @@ public class SelfConfigHelper {
             }
         }
 
-        if (commandsToRemove.size() < 1) {
-            System.out.println("[warn] No commands specified to remove, continuing without modifying config.");
-        } else {
+        if (commandsToRemove.size() > 0) {
             for (int i = 0; i < commandsToExclude.size(); i++) {
                 for (String command : commandsToRemove) {
                     if (commandsToExclude.get(i).equals(command)) {
@@ -157,10 +170,10 @@ public class SelfConfigHelper {
                     }
                 }
             }
-
-            new File(CONFIG_PATH).delete();
-            writeConfigFile();
         }
+
+        new File(CONFIG_PATH).delete();
+        writeConfigFile();
     }
 
     private void showConfig() {
@@ -181,6 +194,10 @@ public class SelfConfigHelper {
     public void exec(boolean editConfig, boolean deleteConfig, boolean showConfig) {
         this.editConfig = editConfig;
         this.showConfig = showConfig;
+
+        if (Runner.userVLAN != 0) {
+            commandsToExclude.add("switchport access vlan " + Runner.userVLAN);
+        }
 
         if (deleteConfig) {
             new File(CONFIG_PATH).delete();

@@ -1,0 +1,56 @@
+Let trimmedContents be a map containing keys for every interface, and values containing the trimmed config for each interface.
+Let reader be a scanner that reads in the input configuration file from Runner.java.
+Let configToTrim be a file that represents the literal file on the machine that contains the input configuration.
+
+The constructor Trimmer() shall:
+    Initialize the trimmedContents LinkedHashMap.
+
+    Check if the input path from Runner is null.
+        Yes:
+            Print an error message and exit.
+    
+    Initialize configToTrim to read the literal file.
+
+    Try to:
+        Initialize the scanner to read from configToTrim.
+    If it fails:
+        Print an error message and exit.
+
+The method trimConfig() shall:
+    Let currentInterface be a String representing the current interface. 
+    Let excludeCommand be a boolean representing whether the current command should be excluded.
+    Let commandsToAdd be an ArrayList representing every per-interface command. 
+    Let currentLine be a String representing the current line.
+
+    While reader has another line:
+        // nextLine() first reads in the next line, and returns the line that was just skipped over.
+        If currentLine does not start with "interface" or currentLine is null:
+            Set currentLine to reader.nextLine().
+        End If
+
+        If currentLine starts with "interface Vlan".
+            Return from the method.
+        End If
+
+        If currentLine starts with "interface":
+            Set currentInterface to the currentLine.
+            Set currentLine to reader.nextLine().
+
+            While currentLine does not start with "interface":
+                For every command in SelfConfigHelper.commandsToExclude:
+                    If currentLine matches on the current command in commandsToExclude:
+                        Set excludeCommand to true.
+                    End If
+                End For
+
+                If excludeCommand is false and currentLine is not '!':
+                    Add the current line to commandsToAdd.
+                End If
+
+                Set currentLine to reader.nextLine().
+            End While
+        End If
+
+        Put into trimmedContents currentInterface as the key, and commandsToAdd as the value.
+        Clear commandsToAdd.
+    End While

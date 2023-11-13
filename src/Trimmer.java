@@ -1,5 +1,8 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -32,42 +35,83 @@ public class Trimmer {
         }
     }
 
+    /**
+     * Current issue: Commands that should be added are added to the commandsToAdd ArrayList, but when it gets to write, somehow it is blank.
+     */
     private void trimConfig() {
-        String line = "";
         String currentInterface = "";
-        boolean updateLine = true;
+        String currentLine = "";
+        boolean excludeCommand = false;
+        // boolean atInterfaceConfig = false;
         List<String> commandsToAdd = new ArrayList<>();
 
         while (reader.hasNextLine()) {
-            if (updateLine) {
-                line = reader.nextLine();
+            if (currentLine.isEmpty()) {
+                currentLine = reader.nextLine();
+            } else {
+                currentLine = reader.nextLine();
             }
 
-            if (line.toLowerCase().contains("interface vlan")) {
-                break;
+            if (currentLine.startsWith("interface Vlan")) {
+                return;
             }
 
-            if (line.contains("interface")) {
-                currentInterface = line;
+            if (currentLine.startsWith("interface")) {
+                // atInterfaceConfig = true;
+                currentInterface = currentLine;
+                currentLine = reader.nextLine();
+                commandsToAdd.clear();
 
-                while (!line.contains("interface")) {
-                    line = reader.nextLine();
-
-                    for (String commandToExclude : SelfConfigHelper.commandsToExclude) {
-                        if (!line.equals(commandToExclude)) {
-                            commandsToAdd.add(line);
+                while (!currentLine.startsWith("interface")) {
+                    for (String excludeThis : SelfConfigHelper.commandsToExclude) {
+                        if (currentLine.strip().equals(excludeThis)) {
+                            excludeCommand = true;
                         }
                     }
+                    
+                    if (!excludeCommand && !currentLine.equals("!")) {
+                        System.out.println("[debug] Adding command " + currentLine + " to commandsToAdd.");    
+                        commandsToAdd.add(currentLine);
+                    }
+
+                    excludeCommand = false;
+                    currentLine = reader.nextLine();
+                }
+
+                
+                if (!commandsToAdd.isEmpty()) {
+                    System.out.println("[debug] Putting the following data into trimmedContents: Key: " + currentInterface + ", value: " + commandsToAdd.toString());
+                    trimmedContents.put(currentInterface, commandsToAdd);
+                }
+            }
+        }
+    }
+
+    private void writeTrimmedConfig() {
+        System.out.println("[debug] Writing to file, contents of trimmedContents: " + trimmedContents.toString());
+
+        try {
+            FileWriter trimmedConfig = new FileWriter(Runner.outputPath);
+
+            trimmedConfig.write("// Trimmed configuration file generated " + ZonedDateTime.now() + ".\n");
+
+            for (String interfaceName : trimmedContents.keySet()) {
+                trimmedConfig.write(interfaceName + "\n");
+                for (String commandToAdd : trimmedContents.get(interfaceName)) {
+                    trimmedConfig.write(" " + commandToAdd + "\n");
                 }
             }
 
-            trimmedContents.put(currentInterface, commandsToAdd);
-
-            updateLine = false;
+            trimmedConfig.close();
+        } catch (IOException e) {
+            System.out.println("[fatal] Failed to write trimmed configuration file.");
+            e.printStackTrace();
+            System.exit(-1);
         }
     }
 
     public void exec() {
         trimConfig();
+        writeTrimmedConfig();
     }
 }

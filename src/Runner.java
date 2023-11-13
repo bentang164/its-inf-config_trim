@@ -3,19 +3,24 @@ import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 public class Runner {
     private final List<String> VALID_ARGS = Arrays.asList(new String[]{"--edit-config", "--delete-config", "--show-config", "--version", "--help"});
+    private final Pattern QUOTATION_MARKS = Pattern.compile("[\"'\u2018\u2019\u201c\u201d]");   // https://stackoverflow.com/a/35534669
     private final String VERSION_BUILD_DAY_CHAR = "Fri";
     private final String VERSION_BUILD_MONTH = "Nov";
     private final int VERSION_BUILD_DAY_NUMERIC = 10;
     private final int VERSION_BUILD_YEAR = 23;
     private final int VERSION_MAJOR = 3;
     private final int VERSION_MINOR = 0;
+    
+    private String userFilePath;
 
     private boolean editConfig, deleteConfig, showConfig;
 
-    public static String inputPath;
+    public static int userVLAN;
+    public static String inputPath, outputPath, fileName;
     public static Scanner userInput;
 
     public Runner() {
@@ -76,15 +81,55 @@ public class Runner {
     private void getInfo() {
         while (true) {
             System.out.print("Enter the path to the input configuration file to trim: ");
-            String userFilePath = userInput.nextLine();
+            userFilePath = userInput.nextLine();
 
-            if (new File(userFilePath.replace("'", "")).exists()) {
-                inputPath = userFilePath;
+            if (new File(QUOTATION_MARKS.matcher(userFilePath).replaceAll("")).exists()) {
+                inputPath = QUOTATION_MARKS.matcher(userFilePath).replaceAll("");
                 break;
             } else {
                 System.out.println("[error] File does not exist or is inaccessible.");
             }
         }
+
+        setFileName();
+
+        while (true) {
+            System.out.print("Enter the building default VLAN, or enter '0' to skip: ");
+            String userInputVLAN = userInput.nextLine();
+
+            try {
+                userVLAN = Integer.parseInt(userInputVLAN);
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("[error] Input is not a valid integer.");
+            }
+        }
+
+        while(true) {
+            System.out.print("Enter the path that the trimmed configuration file should be outputted to, or leave blank to use the default: ");
+            String userOutputPath = userInput.nextLine();
+
+            if (!(userOutputPath.isEmpty() && userOutputPath.isBlank())) {
+                outputPath = userOutputPath;
+                return;
+            } else {
+                System.out.println("[info] No path given, will write to " + System.getProperty("user.home") + "/Downloads/" + fileName);
+                outputPath = System.getProperty("user.home") + "/Downloads/" + fileName;
+                return;
+            }
+        }
+    }
+
+    private void setFileName() {
+        String cleanPath = QUOTATION_MARKS.matcher(userFilePath).replaceAll("");
+
+        String fileExtension = cleanPath.substring(cleanPath.lastIndexOf("."), cleanPath.length());
+
+        if (cleanPath.contains("/")) {
+            cleanPath = cleanPath.substring(cleanPath.lastIndexOf("/") + 1, cleanPath.length());
+        }
+
+        fileName = cleanPath.substring(0, cleanPath.lastIndexOf(".")) + "_trimmed" + fileExtension;
     }
 
     public static void printExit() {
