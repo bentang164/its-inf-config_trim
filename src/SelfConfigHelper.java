@@ -110,10 +110,12 @@ public class SelfConfigHelper {
         }   
 
         if (editConfig) {
+            System.out.println("\n--edit-config passed, prompting to edit the list of commands to exclude when trimming.\n");
             editConfig();
         }
 
         if (showConfig) {
+            System.out.println("\n--show-config passed, displaying current list of commands to exclude when trimming.\n");
             showConfig();
         }
     }
@@ -207,10 +209,12 @@ public class SelfConfigHelper {
         }
         
         if (!checkForConfig()) {
-            if (editConfig) {
-                System.out.println("[warn] --edit-config was passed, but no config file previously existed. Ignoring argument.");
+            if (editConfig || showConfig) {
+                System.out.println("[warn] --edit-config or --show-config was passed, but no config file previously existed. Ignoring argument.");
                 editConfig = false;
+                showConfig = false;
             }
+            
             createConfigFile();
         } else {
             readConfig();

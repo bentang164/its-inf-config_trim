@@ -96,34 +96,33 @@ public class Trimmer {
 
     private void writeTrimmedConfig() {
         try {
-            if (!anyInterfaceIsTrunk) {
-                FileWriter trimmedConfig = new FileWriter(Runner.outputPath);
+            FileWriter trimmedConfig = new FileWriter(Runner.outputPath);
 
-                trimmedConfig.write("// Trimmed configuration file generated " + ZonedDateTime.now() + ".\n");
+            trimmedConfig.write("// Trimmed configuration file generated " + ZonedDateTime.now() + ".\n");
 
-                for (String interfaceName : trimmedContents.keySet()) {
-                    trimmedConfig.write(interfaceName + "\n");
-                    for (String commandToAdd : trimmedContents.get(interfaceName)) {
-                        trimmedConfig.write(" " + commandToAdd + "\n");
-                    }
+            for (String interfaceName : trimmedContents.keySet()) {
+                trimmedConfig.write(interfaceName + "\n");
+                for (String commandToAdd : trimmedContents.get(interfaceName)) {
+                    trimmedConfig.write(" " + commandToAdd + "\n");
                 }
-                
-                trimmedConfig.close();
-            } else {
-                FileWriter trimmedConfig = new FileWriter(Runner.outputPathNoExt + Runner.fileNameNoExt + "_trunk.txt");
+            }
+            
+            trimmedConfig.close();
+            
+            if (anyInterfaceIsTrunk) {
+                FileWriter trimmedConfigTrunk = new FileWriter(Runner.outputPathNoExt + Runner.fileNameNoExt + "_trunk.txt");
 
-                trimmedConfig.write("// Trimmed configuration file for trunk interfaces generated " + ZonedDateTime.now() + ".\n");
+                trimmedConfigTrunk.write("// Trimmed configuration file for trunk interfaces generated " + ZonedDateTime.now() + ".\n");
 
                 for (String interfaceName : trimmedContentsTrunk.keySet()) {
-                    trimmedConfig.write(interfaceName + "\n");
+                    trimmedConfigTrunk.write(interfaceName + "\n");
                     for (String commandToAdd : trimmedContentsTrunk.get(interfaceName)) {
-                        trimmedConfig.write(" " + commandToAdd + "\n");
+                        trimmedConfigTrunk.write(" " + commandToAdd + "\n");
                     }
                 }
 
-                trimmedConfig.close();
+                trimmedConfigTrunk.close();
             }
-
         } catch (IOException e) {
             System.out.println("[fatal] Failed to write trimmed configuration file.");
             e.printStackTrace();

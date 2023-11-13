@@ -46,7 +46,6 @@ public class Runner {
         }
 
         if (arg.equals("--edit-config")) {
-            System.out.println("\n--edit-config passed, prompting to edit the list of commands to exclude when trimming.\n");
             editConfig = true;
             return;
         }
@@ -57,7 +56,6 @@ public class Runner {
         }
 
         if (arg.equals("--show-config")) {
-            System.out.println("\n--show-config passed, displaying current list of commands to exclude when trimming.\n");
             showConfig = true;
             return;
         }
@@ -78,7 +76,7 @@ public class Runner {
     private void getInfo() {
         while (true) {
             System.out.print("Enter the path to the input configuration file to trim: ");
-            userFilePath = userInput.nextLine();
+            userFilePath = userInput.nextLine().strip();
 
             if (new File(QUOTATION_MARKS.matcher(userFilePath).replaceAll("")).exists()) {
                 inputPath = QUOTATION_MARKS.matcher(userFilePath).replaceAll("");
@@ -143,11 +141,12 @@ public class Runner {
         Runner runner = new Runner();
         runner.printStart();
         runner.validateArgs(args);
-        runner.getInfo();
-
+        
         SelfConfigHelper getConfig = new SelfConfigHelper();
         getConfig.exec(runner.editConfig, runner.deleteConfig, runner.showConfig);
         
+        runner.getInfo();
+
         Trimmer trim = new Trimmer();
         trim.exec();
 
