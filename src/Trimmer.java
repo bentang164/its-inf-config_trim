@@ -35,9 +35,6 @@ public class Trimmer {
         }
     }
 
-    /**
-     * Current issue: Commands that should be added are added to the commandsToAdd ArrayList, but when it gets to write, somehow it is blank.
-     */
     private void trimConfig() {
         String currentInterface = "";
         String currentLine = "";
@@ -45,14 +42,11 @@ public class Trimmer {
 
         while (reader.hasNextLine()) {
             List<String> commandsToAdd = new ArrayList<>();
-            if (currentLine.isEmpty()) {
-                currentLine = reader.nextLine();
-            } else {
+            if (currentLine.isEmpty() || !currentLine.contains("interface")) {
                 currentLine = reader.nextLine();
             }
 
             if (currentLine.startsWith("interface Vlan")) {
-                // System.out.println("[debug] At return, trimmedContents is: " + trimmedContents.toString());
                 return;
             }
 
@@ -60,7 +54,7 @@ public class Trimmer {
                 currentInterface = currentLine;
                 currentLine = reader.nextLine();
 
-                while (!currentLine.startsWith("interface")) {
+                while (!currentLine.startsWith("interface") && reader.hasNextLine()) {
                     for (String excludeThis : SelfConfigHelper.commandsToExclude) {
                         if (currentLine.strip().equals(excludeThis)) {
                             excludeCommand = true;
@@ -76,7 +70,6 @@ public class Trimmer {
                 }
             }
 
-            
             if (!commandsToAdd.isEmpty()) {
                 trimmedContents.put(currentInterface, commandsToAdd);
             }
