@@ -44,7 +44,7 @@ This program is compatible with macOS (10.15 or higher) devices that have versio
 
 To run the program, download TrimConfig.jar from the Releases section. Then, run the following in Terminal or the Command Prompt:
 1. ```cd path/to/folder/with/TrimConfig.jar```
-2. ```java -jar TrimConfig.jar [--edit-config] [--delete-config] [--show-config] [--version] [--help]```
+2. ```java -jar TrimConfig.jar [--edit-config] [--delete-config] [--show-config] [--help]```
 
 ### Arguments
 - The ```--edit-config``` argument allows you to edit the list of commands to exclude before continuing.
