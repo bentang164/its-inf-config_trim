@@ -46,6 +46,8 @@ To run the program, download TrimConfig.jar from the Releases section. Then, run
 1. ```cd path/to/folder/with/TrimConfig.jar```
 2. ```java -jar TrimConfig.jar [--edit-config] [--delete-config] [--show-config] [--help]```
 
+When prompted for the path to the input file, it is highly recommended to drag and drop the input file into the Terminal window instead of typing it in manually.
+
 ### Arguments
 - The ```--edit-config``` argument allows you to edit the list of commands to exclude before continuing.
 - The ```--delete-config``` argument will delete the file containing list of commands to exclude from your computer. On next run, you will be prompted to recreate the file.
