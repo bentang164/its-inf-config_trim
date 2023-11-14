@@ -67,20 +67,35 @@ public class Trimmer {
                         currentInterfaceIsTrunk = true;
                     }
 
-                    for (String excludeThis : SelfConfigHelper.commandsToExclude) {
-                        if (currentLine.strip().equals(excludeThis) && !currentInterfaceIsTrunk) {
-                            excludeCommand = true;
+                    if (!currentInterfaceIsTrunk) {
+                        for (String excludeThis : SelfConfigHelper.commandsToExclude) {
+                            if (currentLine.strip().equals(excludeThis)) {
+                                excludeCommand = true;
+                            }
                         }
                     }
                     
-                    if (!excludeCommand && !currentLine.equals("!") && !currentInterfaceIsTrunk) {
+                    if (!excludeCommand && !currentLine.equals("!") && !currentInterfaceIsTrunk && !currentLine.isBlank()) {
                         commandsToAdd.add(currentLine.strip());
-                    } else if (!excludeCommand && !currentLine.equals("!") && currentInterfaceIsTrunk) {
+                    } else if (!excludeCommand && !currentLine.equals("!") && currentInterfaceIsTrunk && !currentLine.isBlank()) {
                         trunkCommandsToAdd.add(currentLine.strip());
                     }
 
                     excludeCommand = false;
                     currentLine = reader.nextLine();
+                }
+            }
+
+            // Description comes before switchport mode, so trunk interfaces will have their descriptions omitted, unless we do this additional check.
+            // If the current interface is trunk, then any commands that were erroneously added into commandsToAdd will be put into the trunkCommandsToAdd ArrayList.
+            // To maintain consistency with the Cisco convention if the command contains description, it will be added to the front of the list so it appears on top.
+            if (currentInterfaceIsTrunk) {
+                for (String command : commandsToAdd) {
+                    if (command.contains("description")) {
+                        trunkCommandsToAdd.add(0, command);
+                    } else {
+                        trunkCommandsToAdd.add(command);
+                    }
                 }
             }
 
@@ -96,32 +111,44 @@ public class Trimmer {
 
     private void writeTrimmedConfig() {
         try {
-            FileWriter trimmedConfig = new FileWriter(Runner.outputPath);
+            if (trimmedContents.keySet().size() > 0) {
+                FileWriter trimmedConfig = new FileWriter(Runner.outputPath);
 
-            trimmedConfig.write("// Trimmed configuration file generated " + ZonedDateTime.now() + ".\n");
+                trimmedConfig.write("! Trimmed configuration file generated " + ZonedDateTime.now() + ".\n\n");
 
-            for (String interfaceName : trimmedContents.keySet()) {
-                trimmedConfig.write(interfaceName + "\n");
-                for (String commandToAdd : trimmedContents.get(interfaceName)) {
-                    trimmedConfig.write(" " + commandToAdd + "\n");
+                for (String interfaceName : trimmedContents.keySet()) {
+                    trimmedConfig.write(interfaceName + "\n");
+                    for (String commandToAdd : trimmedContents.get(interfaceName)) {
+                        trimmedConfig.write(" " + commandToAdd + "\n");
+                    }
+
+                    trimmedConfig.write("!\n");
                 }
+                
+                trimmedConfig.close();
+
+                System.out.println("[info] Complete, non-trunk interfaces were written to " + System.getProperty("user.home") + "/" + Runner.fileName + ".");
+            } else {
+                System.out.println("[warn] Non-trunk interfaces had no configuration after excluding commands, will not write file.");
             }
-            
-            trimmedConfig.close();
             
             if (anyInterfaceIsTrunk) {
                 FileWriter trimmedConfigTrunk = new FileWriter(Runner.outputPathNoExt + Runner.fileNameNoExt + "_trunk.txt");
 
-                trimmedConfigTrunk.write("// Trimmed configuration file for trunk interfaces generated " + ZonedDateTime.now() + ".\n");
+                trimmedConfigTrunk.write("! Trimmed configuration file for trunk interfaces generated " + ZonedDateTime.now() + ".\n\n");
 
                 for (String interfaceName : trimmedContentsTrunk.keySet()) {
                     trimmedConfigTrunk.write(interfaceName + "\n");
                     for (String commandToAdd : trimmedContentsTrunk.get(interfaceName)) {
                         trimmedConfigTrunk.write(" " + commandToAdd + "\n");
                     }
+
+                    trimmedConfigTrunk.write("!\n");
                 }
 
                 trimmedConfigTrunk.close();
+
+                System.out.println("[info] Complete, trunk interfaces were written to " + Runner.outputPathNoExt + Runner.fileNameNoExt + "_trunk.txt.");
             }
         } catch (IOException e) {
             System.out.println("[fatal] Failed to write trimmed configuration file.");
@@ -133,9 +160,5 @@ public class Trimmer {
     public void exec() {
         trimConfig();
         writeTrimmedConfig();
-
-        System.out.print("\n[info] Complete, file(s) written to " + System.getProperty("user.home") + "/" + Runner.fileName + ".");
-        System.out.println(" If there were any trunk interfaces, their configuration was written separately to " + Runner.outputPathNoExt + 
-        Runner.fileNameNoExt + "_trunk.txt");
     }
 }
