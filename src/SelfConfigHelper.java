@@ -29,8 +29,7 @@ public class SelfConfigHelper {
 
     private void createConfigFile() {
         System.out.println("[info] No config file found. Will create one at " + CONFIG_PATH);
-        System.out.println("[info] This config file will contain all commands that will be removed.");
-        System.out.println("\nEnter configuration commands, one per line.  End by passing EXIT.");
+        System.out.println("\nEnter configuration commands to exclude, one per line.  End by passing EXIT.");
 
         while (true) {
             System.out.print("TrimHelper(config)#");
@@ -111,12 +110,12 @@ public class SelfConfigHelper {
         }   
 
         if (editConfig) {
-            System.out.println("\n--edit-config passed, prompting to edit the list of commands to exclude when trimming.\n");
+            System.out.println("[info] --edit-config passed, prompting to edit the list of commands to exclude when trimming.\n");
             editConfig();
         }
 
         if (showConfig) {
-            System.out.println("\n--show-config passed, displaying current list of commands to exclude when trimming.\n");
+            System.out.println("[info] --show-config passed, displaying current list of commands to exclude when trimming.\n");
             showConfig();
         }
     }
@@ -126,7 +125,8 @@ public class SelfConfigHelper {
 
         showConfig();
 
-        System.out.println("Enter configuration commands, one per line.  Prefix with 'no' to remove the specified command.  End by passing EXIT.");
+        System.out.println("Enter configuration commands to exclude, one per line.  " +
+        "Prefix with 'no' to remove the specified command from the exclusion list.  End by passing EXIT.");
 
         while (true) {
             System.out.print("TrimHelper(config)#");
