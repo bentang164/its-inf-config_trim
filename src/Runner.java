@@ -8,10 +8,10 @@ import java.util.regex.Pattern;
 public class Runner {
     private final List<String> VALID_ARGS = Arrays.asList(new String[]{"--edit-config", "--delete-config", "--show-config", "--help"});
     private final Pattern QUOTATION_MARKS = Pattern.compile("[\"'\u2018\u2019\u201c\u201d]");   // https://stackoverflow.com/a/35534669
-    private final String VERSION_BUILD_DAY_CHAR = "Mon";
+    private final String VERSION_BUILD_DAY_CHAR = "Tue";
     private final String VERSION_BUILD_MONTH = "Nov";
-    private final String VERSION = "3.0.0prd1";
-    private final int VERSION_BUILD_DAY_NUMERIC = 13;
+    private final String VERSION = "3.0.1prd1";
+    private final int VERSION_BUILD_DAY_NUMERIC = 14;
     private final int VERSION_BUILD_YEAR = 23;
     
     private String userFilePath;
