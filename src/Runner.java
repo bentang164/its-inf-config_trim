@@ -71,9 +71,11 @@ public class Runner {
         while (true) {
             System.out.print("Enter the path to the input configuration file to trim: ");
             userFilePath = userInput.nextLine().strip();
+            userFilePath = QUOTATION_MARKS.matcher(userFilePath).replaceAll("");
+            userFilePath = userFilePath.replace("\\", "");
 
-            if (new File(QUOTATION_MARKS.matcher(userFilePath).replaceAll("")).exists()) {
-                inputPath = QUOTATION_MARKS.matcher(userFilePath).replaceAll("");
+            if (new File(userFilePath).exists()) {
+                inputPath = userFilePath;
                 break;
             } else {
                 System.out.println("[error] File does not exist or is inaccessible.");
