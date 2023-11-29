@@ -5,7 +5,7 @@ This program will extract non-standard configuration commands from the configura
 
 For example, if you have the following standard port configuration on the new switch:
 ```
-interface TenGigabitEthernet1/0/47
+interface GigabitEthernet1/0/47
  switchport access vlan 123
  switchport mode access
  switchport nonegotiate
@@ -64,7 +64,7 @@ On certain computer configurations, you may receive this error when trying to ru
     # Compile and generate the TrimConfig.class file
     javac *.java
     
-    # Create a new JAR file containing TrimConfig.class/.java with main class name TrimConfig
+    # Create a new JAR file containing all .class and .java files with main class name Runner
     jar cvfe TrimConfig.jar Runner *.class *.java
     ```
 8. The program should now be able to be run as described in the Installation and Use section. 
