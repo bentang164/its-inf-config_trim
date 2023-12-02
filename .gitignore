@@ -40,6 +40,5 @@ TrimConfig.jar
 .settings/*
 !.settings/org.eclipse.jdt.core.prefs
 .vscode/*
-!.vscode/settings.json
 !.vscode/launch.json
 bin

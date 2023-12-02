@@ -16,13 +16,6 @@
                 // "--version"
                 // "--help"
             ]
-        },
-        {
-            "type": "java",
-            "name": "TrimConfig",
-            "request": "launch",
-            "mainClass": "TrimConfig",
-            "projectName": "its-inf-config_trim"
         }
     ]
 }
